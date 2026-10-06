@@ -113,7 +113,7 @@ go build -o qzone-history.exe ./cmd/main.go
 
 ## DuGuo fork 的改动
 
-本仓库基于 [ZHChen2000/qzone-history](https://github.com/ZHChen2000/qzone-history)，保留原作者署名与 Apache-2.0 协议。当前版本为 `v0.0.4-duguo.1`。
+本仓库基于 [ZHChen2000/qzone-history](https://github.com/ZHChen2000/qzone-history)，保留原作者署名与 Apache-2.0 协议。当前版本为 `v0.0.4-duguo.2`。
 
 - 修复中文日期和带转义空白的历史时间文本无法参与排序的问题；JSON 导出稳定地从新到旧排列，浏览页可切换最新或最早在前。
 - 缺少年份的记录保留原文并排在最后，不为离线历史数据猜测年份。
@@ -132,3 +132,13 @@ node scripts/test-viewer.cjs
 ```
 
 Windows 用户可直接使用仓库根目录更新后的 `qzone-history-gui.exe`。已有导出无需重新抓取，可编译 `cmd/htmlview`，在包含 `{QQ}_export.json` 和 `{QQ}_activities.json` 的目录运行 `qzone-history-htmlview.exe -qq 你的QQ号` 生成新浏览页。
+
+### 扫描请求复用与及时保存（duguo.2）
+
+- 本次扫描成功读取过的相同页面可直接复用，最多使用 32 MiB 内存缓存；缓存只在本次扫描内有效，不写入登录凭证或响应文件。
+- 偏移量、时间窗口、set/scope 和接口不同的请求保持独立。空页、登录失败和 HTTP 错误不缓存，继续保留原有扫描范围、接口变体与请求间隔。
+- 新发现的活动按页写入账号自己的 app.db；停止扫描时，已成功保存的活动仍在数据库里。最后导出阶段不重复写入已经保存的批次。保存失败会明确报错。
+- 这是数据库检查点，不是自动断点续扫。任务未完成时 JSON/HTML 仍可能尚未生成；直接终止旧版程序也不会自动获得此保护。
+- 同账号再次导出会重新生成同名 JSON/HTML；不同账号使用各自 QQ 号目录。
+
+验证覆盖相同页面请求复用、参数隔离、失败页重试、32 MiB 上限、保存失败传播，以及取消后关闭并重新打开 SQLite 仍能读到已保存活动。模拟中重复读取同一页 10 次只发出 1 次网络请求；真实账号总耗时仍需后续扫描测量。
