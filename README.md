@@ -76,7 +76,7 @@ qzone-history/
 
 ## 从源码编译
 
-需要 [Go 1.21+](https://go.dev/dl/)。
+需要 [Go 1.25.2+](https://go.dev/dl/)。
 
 ```powershell
 # 分发，与仓库根目录预编译包相同
@@ -110,3 +110,25 @@ go build -o qzone-history.exe ./cmd/main.go
 **作者：[ZHChen](https://github.com/ZHChen2000)** &nbsp;·&nbsp; **联系：QQ 1415094395**
 
 </div>
+
+## DuGuo fork 的改动
+
+本仓库基于 [ZHChen2000/qzone-history](https://github.com/ZHChen2000/qzone-history)，保留原作者署名与 Apache-2.0 协议。当前版本为 `v0.0.4-duguo.1`。
+
+- 修复中文日期和带转义空白的历史时间文本无法参与排序的问题；JSON 导出稳定地从新到旧排列，浏览页可切换最新或最早在前。
+- 缺少年份的记录保留原文并排在最后，不为离线历史数据猜测年份。
+- 默认折叠疑似重复说说，可展开比较全部记录的时间、图片、评论、文字前缀和活动来源，也可切回逐条显示。
+- 在唯一原说说候选和自己的点赞线索支持下，将现有说说与互动重建副本放入同一组，优先显示原说说的发表时间。
+- 有转发线索、不同且无法确认的来源前缀或多个原说说候选时保持独立。相同文案分组只改变显示，原始 JSON 和数据库记录不会因此删除或合并；不累计各副本的点赞数。
+
+### 验证与编译
+
+需要 Go 1.25.2 或以上，以及 Node.js 18 或以上。
+
+```powershell
+go test ./...
+node scripts/test-viewer.cjs
+./scripts/build-release.ps1
+```
+
+Windows 用户可直接使用仓库根目录更新后的 `qzone-history-gui.exe`。已有导出无需重新抓取，可编译 `cmd/htmlview`，在包含 `{QQ}_export.json` 和 `{QQ}_activities.json` 的目录运行 `qzone-history-htmlview.exe -qq 你的QQ号` 生成新浏览页。

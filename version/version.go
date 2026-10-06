@@ -1,7 +1,7 @@
 package version
 
 // Version is the current version of the qzone-history application
-var Version = "v0.0.4"
+var Version = "v0.0.4-duguo.1"
 
 const Author = "ZHChen"
 
