@@ -1,23 +1,46 @@
 <div align="center">
 
-# QQ 空间历史恢复工具（**Qzone-History**）
+# QQ 空间历史恢复工具（**Qzone-History · DuGuo fork**）
 
 
 
-[![Version](https://img.shields.io/badge/version-v0.0.4-brightgreen)](version/version.go)
+[![Version](https://img.shields.io/badge/version-v0.0.4--duguo.2-brightgreen)](version/version.go)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Go](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat&logo=go&logoColor=white)](https://go.dev/)
+[![Go](https://img.shields.io/badge/Go-1.25.2%2B-00ADD8?style=flat&logo=go&logoColor=white)](https://go.dev/)
 [![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat&logo=windows&logoColor=white)](#从源码编译)
-[![GitHub](https://img.shields.io/badge/GitHub-ZHChen2000/qzone--history-181717?style=flat&logo=github)](https://github.com/ZHChen2000/qzone-history)
+[![DuGuo fork](https://img.shields.io/badge/Fork-1nuoiscute/qzone--history-181717?style=flat&logo=github)](https://github.com/1nuoiscute/qzone-history)
+[![Upstream](https://img.shields.io/badge/Upstream-ZHChen2000/qzone--history-555555?style=flat&logo=github)](https://github.com/ZHChen2000/qzone-history)
 
 <br>
 
 从QQ空间「与我相关」活动记录、说说接口、留言板接口中，尽可能恢复**已删除的说说与留言**，<br>
-并导出为本地JSON与HTML浏览页。
+并导出为本地JSON与HTML浏览页。<br>
+**DuGuo 增强版：历史日期排序修复 · 疑似重复记录折叠 · 扫描页面复用 · 活动按页保存**
 
 <sub>仅供个人备份QQ空间数据 · 请遵守<strong>腾讯相关服务条款</strong></sub>
 
 </div>
+
+---
+
+## DuGuo fork 的差异
+
+这是由 **[DuGuo / 1nuoiscute](https://github.com/1nuoiscute)** 维护的增强分支，基于 [ZHChen2000/qzone-history](https://github.com/ZHChen2000/qzone-history)。当前版本为 **`v0.0.4-duguo.2`**，保留原作者署名与 Apache-2.0 协议。
+
+在原有恢复工具的基础上，本 fork 重点改善 **历史数据浏览** 和 **长时间扫描的数据保留**：
+
+| 增强方向 | 本 fork 的改动 |
+|---|---|
+| 历史日期排序 | 识别中文日期和带转义空白的历史时间；JSON 稳定按从新到旧导出，HTML 可切换最新 / 最早在前。缺少年份的记录保留原文、排在最后，不猜年份。 |
+| 疑似重复记录折叠 | 默认折叠疑似重复说说，可展开比较时间、图片、评论和活动来源，或切回逐条显示；只改变浏览展示，原始 JSON 与数据库记录保留。 |
+| 扫描成功页复用 | 同一次扫描中复用已成功读取的相同页面，缓存上限 32 MiB；不同请求参数保持独立，错误和空页不缓存，保留原有扫描范围与限速。 |
+| 活动按页保存 | 新发现的活动按页写入账号自己的 SQLite `app.db`，停止扫描时已保存的活动仍在数据库里；保存失败明确报错。 |
+
+**按页保存是数据库检查点，不是自动断点续扫；扫描未完成时 JSON / HTML 可能还未生成。** 页面缓存减少重复请求，但没有真实账号总耗时测量，不承诺固定提速倍数。
+
+Windows 预编译程序 `qzone-history-gui.exe` 已随这两项功能更新。已有导出可用 `cmd/htmlview` 重新生成新版浏览页，无需为日期排序和折叠功能重新抓取。
+
+实现边界、验证记录和编译方式见[DuGuo fork 的实现细节](#duguo-fork-的实现细节)；基础恢复功能与上手说明继续保留在下方。
 
 ---
 
@@ -80,7 +103,7 @@ qzone-history/
 
 ```powershell
 # 分发，与仓库根目录预编译包相同
-go build -ldflags="-H windowsgui -s -w -X qzone-history/version.Version=v0.0.4" -o qzone-history-gui.exe ./cmd/main.go
+go build -ldflags="-H windowsgui -s -w -X qzone-history/version.Version=v0.0.4-duguo.2" -o qzone-history-gui.exe ./cmd/main.go
 
 # 控制台
 go build -o qzone-history.exe ./cmd/main.go
@@ -111,7 +134,7 @@ go build -o qzone-history.exe ./cmd/main.go
 
 </div>
 
-## DuGuo fork 的改动
+## DuGuo fork 的实现细节
 
 本仓库基于 [ZHChen2000/qzone-history](https://github.com/ZHChen2000/qzone-history)，保留原作者署名与 Apache-2.0 协议。当前版本为 `v0.0.4-duguo.2`。
 
