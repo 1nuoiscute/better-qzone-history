@@ -1,13 +1,11 @@
-name: Release qzone-history
+name: Release multiplatform archives (manual)
 
 permissions:
   id-token: write
   contents: write
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
 
 jobs:
   release:

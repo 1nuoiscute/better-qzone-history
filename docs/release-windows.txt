@@ -1,0 +1,16 @@
+QQ空间历史恢复工具 · DuGuo 增强版
+
+1. 将 ZIP 解压到固定文件夹，双击 qzone-history-gui.exe。
+2. 浏览器自动打开 http://127.0.0.1:17890，使用手机QQ扫码登录。
+3. 设置目标年份和 Max Offset，点击开始恢复。
+4. 完成后打开浏览页，可切换时间排序、展开重复记录和查看来源。
+5. 账号数据保存在程序旁的QQ号文件夹中。
+
+退出程序请点击页面底部“关闭并结束进程”。关闭浏览器窗口不会停止后台任务。
+如果之前开过旧版，请先在旧版页面退出后台，再启动新版。
+
+源码与更新：https://github.com/1nuoiscute/better-qzone-history
+下载：https://github.com/1nuoiscute/better-qzone-history/releases/latest
+原项目：https://github.com/ZHChen2000/qzone-history
+原作者：ZHChen；增强分支维护：DuGuo / 1nuoiscute
+协议：Apache License 2.0（见 LICENSE）

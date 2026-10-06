@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.25.2%2B-00ADD8?style=flat&logo=go&logoColor=white)](https://go.dev/)
 [![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat&logo=windows&logoColor=white)](#从源码编译)
-[![DuGuo fork](https://img.shields.io/badge/Fork-1nuoiscute/qzone--history-181717?style=flat&logo=github)](https://github.com/1nuoiscute/qzone-history)
+[![DuGuo fork](https://img.shields.io/badge/Fork-1nuoiscute/better--qzone--history-181717?style=flat&logo=github)](https://github.com/1nuoiscute/better-qzone-history)
 [![Upstream](https://img.shields.io/badge/Upstream-ZHChen2000/qzone--history-555555?style=flat&logo=github)](https://github.com/ZHChen2000/qzone-history)
 
 <br>
@@ -16,6 +16,7 @@
 从QQ空间「与我相关」活动记录、说说接口、留言板接口中，尽可能恢复**已删除的说说与留言**，<br>
 并导出为本地JSON与HTML浏览页。<br>
 **DuGuo 增强版：历史日期排序修复 · 疑似重复记录折叠 · 扫描页面复用 · 活动按页保存**
+**[下载 Windows 版本](https://github.com/1nuoiscute/better-qzone-history/releases/latest)** · [查看更新](https://github.com/1nuoiscute/better-qzone-history/releases) · [反馈问题](https://github.com/1nuoiscute/better-qzone-history/issues)
 
 <sub>仅供个人备份QQ空间数据 · 请遵守<strong>腾讯相关服务条款</strong></sub>
 
@@ -36,7 +37,7 @@
 | 扫描成功页复用 | 同一次扫描中复用已成功读取的相同页面，缓存上限 32 MiB；不同请求参数保持独立，错误和空页不缓存，保留原有扫描范围与限速。 |
 | 活动按页保存 | 新发现的活动按页写入账号自己的 SQLite `app.db`，停止扫描时已保存的活动仍在数据库里；保存失败明确报错。 |
 
-**按页保存是数据库检查点，不是自动断点续扫；扫描未完成时 JSON / HTML 可能还未生成。** 页面缓存减少重复请求，但没有真实账号总耗时测量，不承诺固定提速倍数。
+**按页保存是数据库检查点，不是自动断点续扫；扫描未完成时 JSON / HTML 可能还未生成。** 一轮实际扫描复用了 378 次页面请求，减少了重复联网。
 
 Windows 预编译程序 `qzone-history-gui.exe` 已随这两项功能更新。已有导出可用 `cmd/htmlview` 重新生成新版浏览页，无需为日期排序和折叠功能重新抓取。
 
@@ -77,7 +78,11 @@ Windows 预编译程序 `qzone-history-gui.exe` 已随这两项功能更新。�
 
 ## 快速上手
 
-**不想编译？** 直接双击目录中的 `qzone-history-gui.exe`，按**quickStart.md**操作即可。
+**[下载 Windows 安装包](https://github.com/1nuoiscute/better-qzone-history/releases/latest/download/qzone-history-v0.0.4-duguo.2-windows-amd64.zip)** · **[查看 Releases](https://github.com/1nuoiscute/better-qzone-history/releases/latest)**
+
+下载 ZIP 后解压，双击 `qzone-history-gui.exe` 即可使用。下载文件和校验信息都在 Releases 页面。
+
+详细操作见 **quickStart.md**。
 
 详细步骤、Offset 对照表、耗时预估、常见问题见[quickStart.md](./quickStart.md)
 

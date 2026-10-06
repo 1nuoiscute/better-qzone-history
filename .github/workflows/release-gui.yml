@@ -1,4 +1,4 @@
-name: Release GUI binary
+name: Release Windows GUI
 
 permissions:
   contents: write
@@ -12,23 +12,40 @@ jobs:
   windows-gui:
     runs-on: windows-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-
-      - name: Build qzone-history-gui.exe
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check release version
         shell: pwsh
-        run: ./scripts/build-release.ps1
-
-      - name: Upload to GitHub Release
+        run: |
+          $versionSource = Get-Content version/version.go -Raw
+          if ($versionSource -notmatch 'Version = "(v[^\"]+)"') { throw 'Missing version' }
+          if ($Matches[1] -ne $env:GITHUB_REF_NAME) { throw 'Tag and source version differ' }
+      - name: Run regression checks
+        shell: pwsh
+        run: |
+          go test ./...
+          if ($LASTEXITCODE -ne 0) { throw 'Go checks failed' }
+          node scripts/test-viewer.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Viewer checks failed' }
+      - name: Build and package
+        shell: pwsh
+        run: |
+          ./scripts/build-release.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Build failed' }
+          ./scripts/package-release.ps1
+      - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
-          files: qzone-history-gui.exe
-          append_body: true
-          body: |
-            ## Windows GUI（无黑窗口）
-            直接下载 `qzone-history-gui.exe` 双击运行；与仓库根目录预编译包一致。
+          name: "DuGuo 增强版 ${{ github.ref_name }}"
+          body_path: "docs/releases/${{ github.ref_name }}.md"
+          make_latest: true
+          fail_on_unmatched_files: true
+          files: |
+            dist/qzone-history-gui.exe
+            dist/qzone-history-*-windows-amd64.zip
+            dist/SHA256SUMS.txt

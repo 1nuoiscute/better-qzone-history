@@ -27,3 +27,6 @@ debug_*.txt
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Release packaging output
+dist/

@@ -1,4 +1,4 @@
-project_name: qzone-history
+project_name: better-qzone-history
 
 before:
   hooks:
@@ -15,7 +15,7 @@ builds:
     main: ./cmd/main.go
     env:
       - CGO_ENABLED=0
-    ldflags: "-s -w -H windowsgui -X qzone-history/version.Version={{.Version}}"
+    ldflags: "-s -w -X qzone-history/version.Version={{.Version}}"
 
 archives:
   - format: zip
@@ -23,8 +23,8 @@ archives:
 
 release:
   github:
-    owner: ZHChen2000
-    name: qzone-history
+    owner: 1nuoiscute
+    name: better-qzone-history
 
 changelog:
   sort: asc
